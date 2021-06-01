@@ -1,7 +1,7 @@
 package com.pacman.menues;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.pacman.tools.Pair;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.pacman.controller.LoginMenuController;
-import jdk.internal.net.http.common.Pair;
 
 
 public class LoginMenu extends ScreenAdapter {
@@ -52,7 +51,7 @@ public class LoginMenu extends ScreenAdapter {
         buttonLogin.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Pair<Boolean, String> answer = loginMenuController.processInfo(
+                Pair answer = loginMenuController.processInfo(
                         usernameTextField.getText(), passwordTextField.getText());
                 if (answer.first && showMessage(answer.second, false)) {
                     mainClass.setScreenToUserMenu(loginMenuController.getUser());

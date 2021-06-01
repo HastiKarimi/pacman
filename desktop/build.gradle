@@ -37,3 +37,8 @@ task dist(type: Jar) {
 dist.dependsOn classes
 
 eclipse.project.name = appName + "-desktop"
+
+run {
+//    jvmArgs = ['--add-exports=java.net.http/jdk.internal.net.http.common=ALL-UNNAMED']
+    jvmArgs = ['--add-exports=java.net.http/jdk.internal.net.http.common=ALL-UNNAMED']
+}

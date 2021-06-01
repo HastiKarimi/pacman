@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.pacman.controller.SignUpMenuController;
-import jdk.internal.net.http.common.Pair;
+import com.pacman.tools.Pair;
 
 
 public class SignUpMenu extends ScreenAdapter {
@@ -65,14 +65,14 @@ public class SignUpMenu extends ScreenAdapter {
 //                    confirmPasswordTextField.setText("");
 //                }
 
-                Pair<Boolean, String> answer = signUpMenuController.processInfo(
+                Pair answer = signUpMenuController.processInfo(
                         usernameTextField.getText(), passwordTextField.getText()
                         , confirmPasswordTextField.getText());
 
-                if (answer.first && showMessage(answer.second, false)) {
+                if (!answer.first && showMessage(answer.second, false)) {
                     mainClass.setScreenToMainMenu();
                 } else {
-                    if (!answer.first)  showMessage(answer.second, true);
+                    if (answer.first)  showMessage(answer.second, true);
                     usernameTextField.setText("");
                     passwordTextField.setText("");
                     confirmPasswordTextField.setText("");

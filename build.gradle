@@ -78,3 +78,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.4'
 
 }
+
+//dependencies {
+//        jvmArgs = ['--add-exports=javafx.base/com.sun.javafx.event=ALL-UNNAMED']
+//    ['--add-exports=java.net.http/jdk.internal.net.http = All-UNNAMED']
+//}
+

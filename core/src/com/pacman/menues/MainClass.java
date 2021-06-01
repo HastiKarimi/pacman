@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Align;
 import com.pacman.model.User;
 import lombok.Getter;
 
+
 public class MainClass extends Game {
     public Stage stage;
     public BitmapFont whiteFont;
@@ -22,6 +23,7 @@ public class MainClass extends Game {
     public TextureAtlas textureAtlas2;   //freezing
     public Skin skin2;
     public Skin skin2Json;
+    public static boolean isSuccessful;
 
     @Override
     public void create() {
@@ -111,14 +113,14 @@ public class MainClass extends Game {
     public boolean createDialog(String message, boolean isWarning, Stage stage) {
         //TODO success box doesn't show.
         Dialog dialog;
-        final boolean[] isSuccessful = {false};
+        MainClass.isSuccessful = false;
         String title = "Success Message";
         if (isWarning) title = "Error";
 
         dialog = new Dialog(title, skin2Json, "dialog"){
             @Override
             protected void result(Object object) {
-                isSuccessful[0] = true;
+                MainClass.isSuccessful = true;
             }
         };
         dialog.getBackground().setMinWidth(400);
@@ -128,7 +130,7 @@ public class MainClass extends Game {
         dialog.key(Input.Keys.ENTER, true); //sends "true" when the ENTER key is pressed
         dialog.show(stage);
 
-        return isSuccessful[0];
+        return MainClass.isSuccessful;
     }
 
     public void setAssets() {

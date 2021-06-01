@@ -1,7 +1,7 @@
 package com.pacman.menues;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.pacman.tools.Pair;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.pacman.controller.ChangePasswordController;
 import com.pacman.model.User;
-import jdk.internal.net.http.common.Pair;
 
 
 public class ChangePasswordMenu extends ScreenAdapter { //done
@@ -58,7 +57,7 @@ public class ChangePasswordMenu extends ScreenAdapter { //done
         buttonContinue.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Pair<Boolean, String> answer = changePasswordController.processInfo(prePasTextField.getText(),
+                Pair answer = changePasswordController.processInfo(prePasTextField.getText(),
                         newPasTextField.getText(), confirmPasTextField.getText());
                 if (answer.first && showMessage(answer.second, false)) {
                     mainClass.setScreenToUserMenu(user);

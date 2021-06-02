@@ -7,38 +7,11 @@ import java.util.Scanner;
 
 public class BoardCreator {
 
-//    public static void main(String[] args) throws Exception {
-//        Scanner dataIn = new Scanner(System.in);
-//        int tool = dataIn.nextInt();
-//        int arz = dataIn.nextInt();
-//        int t = dataIn.nextInt();
-//
-//        for (int i = 0; i < t; i++) {
-//            createBoard(arz, tool);
-//            System.out.println("");
-//        }
-//
-//        dataIn.close();
-//    }
-
-//    public static void createMaze(int tool, int arz) {
-////        Scanner dataIn = new Scanner(System.in);
-////        int tool = dataIn.nextInt();
-////        int arz = dataIn.nextInt();
-////        int t = dataIn.nextInt();
-//        createBoard(arz, tool);
-//
-////        dataIn.close();
-//    }
-
-    public static int[][] main(String[] args) {
+    public static int[][] createMaze() {
         return createBoard(13, 13);
     }
 
-    /*
-     * *****************************************************************************
-     * *
-     */
+    //******************************************************************************
     public static int[][] createBoard(int tool, int arz) {
 
         int[][] visited = new int[tool][arz];
@@ -53,83 +26,96 @@ public class BoardCreator {
 
         move(0, 0, visited, tool, arz, board);
         reduceWalls(board, tool, arz);
-//        board[0][1] = -1;
-//        board[2 * tool][2 * arz - 1] = -1;
+        putEnergyBombs(board, tool, arz);
 
-//        System.out.println(Arrays.deepToString(board).replace("], ", "\n").replace("[[", "").replace("]]", "").replace("[", "").replace(", ", "").replace("-1", "e").replace("-2", "*").replace("1", "-"));
-        System.out.println(Arrays.deepToString(board).replace("], ", "\n").replace("[[", "").replace("]]", "").replace("[", "").replace(", ", "").replace("1", "*").replace("2", " "));
+        return board;
+//        System.out.println(Arrays.deepToString(board).replace("], ", "\n").replace("[[", "").replace("]]", "").replace("[", "").replace(", ", "").replace("1", "*").replace("2", " "));
     }
 
-    /*
-     * *****************************************************************************
-     * *
-     */
+
+    //******************************************************************************
     // harkat : 0: x++ 1: y-- 2: x-- 3: y++
-    public static void move(int xNow, int yNow, int[][] jadval, int n, int m, int[][] divar) {
-        jadval[xNow][yNow] = 1;
-        int harkat = check(xNow, yNow, jadval, n, m);
-        while (harkat != -1) {
-            switch (harkat) {
+    public static void move(int xNow, int yNow, int[][] visitedBoard, int n, int m, int[][] mainBoard) {
+        visitedBoard[xNow][yNow] = 1;
+        int moveStatus = check(xNow, yNow, visitedBoard, n, m);
+        while (moveStatus != -1) {
+            switch (moveStatus) {
                 case 0:
-                    divar[2 * xNow + 2][2 * yNow + 1] = 2;
-                    move(xNow + 1, yNow, jadval, n, m, divar);
+                    mainBoard[2 * xNow + 2][2 * yNow + 1] = 2;
+                    move(xNow + 1, yNow, visitedBoard, n, m, mainBoard);
                     break;
 
                 case 1:
-                    divar[2 * xNow + 1][2 * yNow] = 2;
-                    move(xNow, yNow - 1, jadval, n, m, divar);
+                    mainBoard[2 * xNow + 1][2 * yNow] = 2;
+                    move(xNow, yNow - 1, visitedBoard, n, m, mainBoard);
                     break;
 
                 case 2:
-                    divar[2 * xNow][2 * yNow + 1] = 2;
-                    move(xNow - 1, yNow, jadval, n, m, divar);
+                    mainBoard[2 * xNow][2 * yNow + 1] = 2;
+                    move(xNow - 1, yNow, visitedBoard, n, m, mainBoard);
                     break;
 
                 case 3:
-                    divar[2 * xNow + 1][2 * yNow + 2] = 2;
-                    move(xNow, yNow + 1, jadval, n, m, divar);
+                    mainBoard[2 * xNow + 1][2 * yNow + 2] = 2;
+                    move(xNow, yNow + 1, visitedBoard, n, m, mainBoard);
                     break;
             }
 
-            harkat = check(xNow, yNow, jadval, n, m);
+            moveStatus = check(xNow, yNow, visitedBoard, n, m);
         }
     }
 
-    /*
-     * *****************************************************************************
-     * *
-     */
-    public static int check(int xNow, int yNow, int[][] jadval, int n, int m) {
+
+    //*****************************************************************************
+    public static int check(int xNow, int yNow, int[][] visitedBoard, int n, int m) {
         Random random = new Random();
-        int randNum = random.nextInt(12);
-        ArrayList<Integer> majmooe = new ArrayList<>();
-        if ((xNow + 1) < n && jadval[xNow + 1][yNow] == 2)
-            majmooe.add(0);
+        ArrayList<Integer> set = new ArrayList<>();
+        if ((xNow + 1) < n && visitedBoard[xNow + 1][yNow] == 1)
+            set.add(0);
 
-        if ((yNow - 1) >= 0 && jadval[xNow][yNow - 1] == 2)
-            majmooe.add(1);
+        if ((yNow - 1) >= 0 && visitedBoard[xNow][yNow - 1] == 1)
+            set.add(1);
 
-        if ((xNow - 1) >= 0 && jadval[xNow - 1][yNow] == 2)
-            majmooe.add(2);
+        if ((xNow - 1) >= 0 && visitedBoard[xNow - 1][yNow] == 1)
+            set.add(2);
 
-        if ((yNow + 1) < m && jadval[xNow][yNow + 1] == 2)
-            majmooe.add(3);
+        if ((yNow + 1) < m && visitedBoard[xNow][yNow + 1] == 1)
+            set.add(3);
 
-        if (majmooe.size() == 0)
+        if (set.size() == 0)
             return -1;
         else {
-            randNum = randNum % (majmooe.size());
-            return (majmooe.get(randNum));
+            int randNum = random.nextInt(12) % (set.size());
+            return (set.get(randNum));
         }
 
     }
 
     public static void reduceWalls(int[][] board, int width, int height) {
         Random random = new Random();
-        for (int i = 1; i < 2 * width; i++)
+        for (int i = 1; i < 2 * width; i++) {
             for (int j = 1; j < 2 * height; j++)
                 if (board[i][j] == 1)
-                    if (random.nextInt(2) == 0)
+                    if (random.nextInt(2) != 0)
                         board[i][j] = 2;
+        }
+
+        for (int i = 1; i < 2 * width; i += 2) {
+            for (int j = 1; j < 2 * height; j += 2) {
+                if (board[i - 1][j] == 1 && board[i + 1][j] == 1
+                        && board[i][j - 1] == 1 && board[i][j + 1] == 1) {
+                    board[i+1][j] = 2;
+                    board[i-1][j] = 2;
+                }
+            }
+        }
+
+    }
+
+    public static void putEnergyBombs(int[][] board, int width, int height) {
+        board[5][5] = 3;
+        board[21][21] = 3;
+        board[5][21] = 3;
+        board[21][5] = 3;
     }
 }

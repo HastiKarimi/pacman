@@ -1,4 +1,4 @@
-package com.pacman.menues;
+package com.pacman.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Align;
 import com.pacman.model.User;
-import lombok.Getter;
+import com.pacman.screens.game.GameScreen;
 
 
 public class MainClass extends Game {
@@ -29,7 +29,8 @@ public class MainClass extends Game {
     public void create() {
         setAssets();
         stage = new Stage();
-        setScreenToMainMenu();
+//        setScreenToMainMenu();
+        setScreenToGameScreen(null);
     }
 
     public void setScreenToSignUpMenu() {
@@ -54,6 +55,10 @@ public class MainClass extends Game {
 
     public void setScreenToPlayMenu(User user) {
         //TODO
+    }
+
+    public void setScreenToGameScreen(User user) {
+        setScreen(new GameScreen(this, user));
     }
 
     @Override

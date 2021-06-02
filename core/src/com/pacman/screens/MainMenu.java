@@ -1,4 +1,4 @@
-package com.pacman.menues;
+package com.pacman.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -68,7 +68,7 @@ public class MainMenu extends ScreenAdapter {
         table.row();
 
 
-        buttonExit = createButton("Exit Game");
+        buttonExit = createButton("Exit GameScreen");
         buttonExit.pad(20);
         buttonExit.addListener(new ClickListener() {
             @Override
@@ -90,7 +90,7 @@ public class MainMenu extends ScreenAdapter {
     }
 
     static TextButton getButton(String text, Table table, Skin skin) {
-//        table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//        table.setBounds(0, 0, Gdx.graphics.getWidthOfMap(), Gdx.graphics.getHeightOfMap());
         TextButtonStyle textButtonStyle = new TextButtonStyle();
         textButtonStyle.font = new BitmapFont(Gdx.files.internal("freezing/raw/font-title-export.fnt"), false);
         textButtonStyle.over = skin.getDrawable("button-over");

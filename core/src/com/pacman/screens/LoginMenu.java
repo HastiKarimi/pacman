@@ -1,6 +1,7 @@
-package com.pacman.menues;
+package com.pacman.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.pacman.tools.Pair;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -9,25 +10,24 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.pacman.controller.SignUpMenuController;
-import com.pacman.tools.Pair;
+import com.pacman.controller.LoginMenuController;
 
 
-public class SignUpMenu extends ScreenAdapter {
-    SignUpMenuController signUpMenuController;
+public class LoginMenu extends ScreenAdapter {
+    LoginMenuController loginMenuController;
     MainClass mainClass;
     Stage stage;
-    TextButton buttonRegister;
-    Label usernameLabel, passwordLabel, confirmPasswordLabel;
+    TextButton buttonLogin;
+    Label usernameLabel, passwordLabel;
     TextField usernameTextField, passwordTextField, confirmPasswordTextField;
     Table table;
 
     {
-        signUpMenuController = new SignUpMenuController(this);
+        loginMenuController = new LoginMenuController(this);
         this.stage = new Stage(new ExtendViewport(1024, 1024));
     }
 
-    public SignUpMenu(MainClass mainClass) {
+    public LoginMenu(MainClass mainClass) {
         this.mainClass = mainClass;
     }
 
@@ -40,46 +40,37 @@ public class SignUpMenu extends ScreenAdapter {
         usernameTextField = mainClass.createTextField("");
         passwordLabel = mainClass.createLabel("password: ");
         passwordTextField = mainClass.createTextField("");
-        confirmPasswordLabel = mainClass.createLabel("confirm: ");
-        confirmPasswordTextField = mainClass.createTextField("");
 
         table.add(usernameLabel);
         table.add(usernameTextField).width(300).height(60).row();
         table.add(passwordLabel);
         table.add(passwordTextField).width(300).height(60).row();
-        table.add(confirmPasswordLabel);
-        table.add(confirmPasswordTextField).width(300).height(60).row();
 
-        buttonRegister = mainClass.createButton("Register");
-        buttonRegister.padTop(20);
-        buttonRegister.addListener(new ClickListener(){
+        buttonLogin = mainClass.createButton("Login");
+        buttonLogin.padTop(20);
+        buttonLogin.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-//                if (signUpMenuController.processInfo(usernameTextField.getText(),
-//                        passwordTextField.getText(), confirmPasswordTextField.getText())) {
+                Pair answer = loginMenuController.processInfo(
+                        usernameTextField.getText(), passwordTextField.getText());
+                if (answer.first && showMessage(answer.second, false)) {
+                    mainClass.setScreenToUserMenu(loginMenuController.getUser());
+                } else {
+                    if (!answer.first)  showMessage(answer.second, true);
+                    usernameTextField.setText("");
+                    passwordTextField.setText("");
+                }
+//                if (loginMenuController.processInfo(usernameTextField.getText(),
+//                        passwordTextField.getText())) {
 //                    //TODO success dialog is not shown
-//                    mainClass.setScreenToMainMenu();
+//                    mainClass.setScreenToUserMenu(loginMenuController.getUser());
 //                } else {
 //                    usernameTextField.setText("");
 //                    passwordTextField.setText("");
-//                    confirmPasswordTextField.setText("");
 //                }
-
-                Pair answer = signUpMenuController.processInfo(
-                        usernameTextField.getText(), passwordTextField.getText()
-                        , confirmPasswordTextField.getText());
-
-                if (!answer.first && showMessage(answer.second, false)) {
-                    mainClass.setScreenToMainMenu();
-                } else {
-                    if (answer.first)  showMessage(answer.second, true);
-                    usernameTextField.setText("");
-                    passwordTextField.setText("");
-                    confirmPasswordTextField.setText("");
-                }
             }
         });
-        table.add(buttonRegister).colspan(2).width(250).align(Align.center).padTop(50);
+        table.add(buttonLogin).colspan(2).width(250).align(Align.center).padTop(50);
         table.row();
 
 

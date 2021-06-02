@@ -1,4 +1,4 @@
-package com.pacman.menues;
+package com.pacman.screens;
 
 public enum Messages {
     USER_EXIST("this user already exists"),

@@ -1,4 +1,4 @@
-package com.pacman.menues;
+package com.pacman.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;

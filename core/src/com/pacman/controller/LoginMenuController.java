@@ -1,7 +1,7 @@
 package com.pacman.controller;
 
-import com.pacman.menues.LoginMenu;
-import com.pacman.menues.Messages;
+import com.pacman.screens.LoginMenu;
+import com.pacman.screens.Messages;
 import com.pacman.model.User;
 import com.pacman.tools.Pair;
 

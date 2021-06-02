@@ -2,8 +2,7 @@ package com.pacman.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.pacman.Pacman;
-import com.pacman.menues.MainClass;
+import com.pacman.screens.MainClass;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {

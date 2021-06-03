@@ -68,7 +68,7 @@ public class MainMenu extends ScreenAdapter {
         table.row();
 
 
-        buttonExit = createButton("Exit GameScreen");
+        buttonExit = createButton("Exit Game");
         buttonExit.pad(20);
         buttonExit.addListener(new ClickListener() {
             @Override

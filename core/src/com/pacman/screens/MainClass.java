@@ -3,6 +3,7 @@ package com.pacman.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -29,8 +30,13 @@ public class MainClass extends Game {
     public void create() {
         setAssets();
         stage = new Stage();
-//        setScreenToMainMenu();
-        setScreenToGameScreen(null);
+        setScreenToMainMenu();
+//        setScreenToGameScreen(null);
+    }
+
+    @Override
+    public void setScreen(Screen screen) {
+        super.setScreen(screen);
     }
 
     public void setScreenToSignUpMenu() {
@@ -125,7 +131,8 @@ public class MainClass extends Game {
         dialog = new Dialog(title, skin2Json, "dialog"){
             @Override
             protected void result(Object object) {
-                MainClass.isSuccessful = true;
+                if((Boolean) object)
+                    MainClass.isSuccessful = true;
             }
         };
         dialog.getBackground().setMinWidth(400);
@@ -135,6 +142,9 @@ public class MainClass extends Game {
         dialog.key(Input.Keys.ENTER, true); //sends "true" when the ENTER key is pressed
         dialog.show(stage);
 
+//        while (true)
+//            if (MainClass.isSuccessful)
+//                return true;
         return MainClass.isSuccessful;
     }
 

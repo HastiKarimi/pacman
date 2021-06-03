@@ -8,18 +8,20 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.pacman.screens.game.GameScreen;
 
 public class GameMap extends Actor {
-    int spaceX = 40; //2.5 * 16
-    int spaceY = 40;
-    GameScreen gameScreen;
-    String id;
-    String name;
-    int[][] map;
+    public int spaceX = 40; //2.5 * 16
+    public int spaceY = 40;
+    public GameScreen gameScreen;
+    public String id;
+    public String name;
+    public int[][] map;
+
+    public Pacman pacman;
+    public Ghost[] ghosts;
+
 
     private TextureRegion[][] tiles;
 
     public GameMap(GameScreen gameScreen, int[][] map) {
-//        this.id = data.id;
-//        this.name = data.name;
         this.gameScreen = gameScreen;
         this.map = map;
 
@@ -61,5 +63,9 @@ public class GameMap extends Actor {
 
     public int getLayers() {
         return 1;
+    }
+
+    public void update(float delta) {
+
     }
 }

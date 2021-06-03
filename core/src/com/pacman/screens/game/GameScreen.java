@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pacman.model.GameMap;
+import com.pacman.model.Ghost;
+import com.pacman.model.TileType;
 import com.pacman.model.User;
 import com.pacman.screens.MainClass;
 import com.pacman.tools.boardcreator.BoardCreator;
@@ -16,6 +18,7 @@ public class GameScreen implements Screen {
     MainClass mainClass;
     User user;
     GameMap gameMap;
+    public boolean  isGameEnded;
 
     public GameScreen(MainClass mainClass, User user) {
         this.user = user;
@@ -26,6 +29,10 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         stage.addActor(gameMap);
+        for (Ghost ghost: gameMap.ghosts)
+            stage.addActor(ghost);
+
+        stage.addActor(gameMap.pacman);
     }
 
     @Override
@@ -35,6 +42,22 @@ public class GameScreen implements Screen {
 
         stage.act(delta);
         stage.draw();
+
+        if ((isGameEnded = isGameEnded()))
+            ;//TODO
+    }
+
+    public boolean isGameEnded() {
+        int[][] mapOfGame = gameMap.map;
+        for (int i = 0; i < 2*13+1; i++) {
+            for (int j = 0; j < 2*13+1; j++) {
+                if (mapOfGame[i][j]!= TileType.WALL.getId() ||
+                        mapOfGame[i][j]!=TileType.NONE.getId())
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

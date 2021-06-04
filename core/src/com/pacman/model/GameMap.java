@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.pacman.screens.game.GameScreen;
+import com.pacman.tools.timer.ExampleTimer;
 
 public class GameMap extends Actor {
     public int spaceX = 40; //2.5 * 16
@@ -17,6 +18,7 @@ public class GameMap extends Actor {
 
     public Pacman pacman;
     public Ghost[] ghosts;
+    public ExampleTimer gameTimer;
 
 
     private TextureRegion[][] tiles;
@@ -27,6 +29,7 @@ public class GameMap extends Actor {
 
         tiles = TextureRegion.split(new Texture("tile.png"), TileType.TILE_SIZE, TileType.TILE_SIZE);
     }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         for (int layer = 0; layer < getLayers(); layer++) {
@@ -34,7 +37,7 @@ public class GameMap extends Actor {
                 for (int col = 0; col < getWidthOfMap(); col++) {
                     TileType type = this.getTileTypeByCoordinate(layer, col, row);
                     if (type != null && type.getId() != 4)
-                        batch.draw(tiles[0][type.getId() - 1], col * TileType.TILE_SIZE + spaceX, row * TileType.TILE_SIZE + spaceY);
+                        batch.draw(tiles[0][type.getId() - 1], row * TileType.TILE_SIZE + spaceX, col * TileType.TILE_SIZE + spaceY);
                 }
             }
         }
@@ -43,14 +46,27 @@ public class GameMap extends Actor {
 
 
     public TileType getTileTypeByLocation(int layer, float x, float y) {
-        return this.getTileTypeByCoordinate(layer, (int) (x / TileType.TILE_SIZE), getHeightOfMap() - (int) (y / TileType.TILE_SIZE) - 1);
+        int newX = (int) ((x - spaceX) / TileType.TILE_SIZE);
+        int newY = (int) ((y - spaceY) / TileType.TILE_SIZE);
+//
+//        newX -= spaceX;
+//        newY -= spaceY;
+//
+//        newX = newX / TileType.TILE_SIZE;
+//        newY = newY / TileType.TILE_SIZE;
+
+//        newX *= TileType.TILE_SIZE;
+//        newY *= TileType.TILE_SIZE;
+//        newX += spaceX;
+//        newY += spaceY;
+        return this.getTileTypeByCoordinate(layer, newX, newY);
     }
 
-    public TileType getTileTypeByCoordinate(int layer, int col, int row) {
-        if (col < 0 || col >= getWidthOfMap() || row < 0 || row >= getHeightOfMap())
+    public TileType getTileTypeByCoordinate(int layer, int row, int col) {
+        if (col < 0 || col >= getHeightOfMap() || row < 0 || row >= getWidthOfMap())
             return null;
-
-        return TileType.getTileTypeById(map[getHeightOfMap() - row - 1][col]);
+        System.out.println(row + " " + col);
+        return TileType.getTileTypeById(map[row][col]);
     }
 
     public int getWidthOfMap() {
@@ -66,6 +82,6 @@ public class GameMap extends Actor {
     }
 
     public void update(float delta) {
-
+        pacman.update(delta);
     }
 }

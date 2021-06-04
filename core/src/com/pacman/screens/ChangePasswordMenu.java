@@ -1,6 +1,7 @@
 package com.pacman.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.pacman.tools.Pair;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -59,10 +60,11 @@ public class ChangePasswordMenu extends ScreenAdapter { //done
             public void clicked(InputEvent event, float x, float y) {
                 Pair answer = changePasswordController.processInfo(prePasTextField.getText(),
                         newPasTextField.getText(), confirmPasTextField.getText());
-                if (answer.first && showMessage(answer.second, false)) {
-                    mainClass.setScreenToUserMenu(user);
+                if (answer.first) {
+                    showMessage(answer.second, false, new UserMenu(mainClass, user));
+//                    mainClass.setScreenToUserMenu(user);
                 } else {
-                    if (!answer.first)  showMessage(answer.second, true);
+//                    if (!answer.first)  showMessage(answer.second, true);
                     prePasTextField.setText("");
                     newPasswordLabel.setText("");
                     confirmPasTextField.setText("");
@@ -111,7 +113,7 @@ public class ChangePasswordMenu extends ScreenAdapter { //done
 
     }
 
-    public boolean showMessage(String message, boolean isWarning) {
-        return mainClass.createDialog(message, isWarning, stage);
+    public void showMessage(String message, boolean isWarning, Screen screen) {
+        mainClass.createDialog(message, isWarning, stage, screen);
     }
 }

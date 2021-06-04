@@ -11,103 +11,72 @@ public class BoardCreator {
         return createBoard(13, 13);
     }
 
+//    public static void main(String[] args) {
+//        createBoard(13, 13);
+//    }
+
     //******************************************************************************
-    public static int[][] createBoard(int tool, int arz) {
+    public static int[][] createBoard(int width, int height) {
 
-        int[][] visited = new int[tool][arz];
-        int[][] board = new int[2 * tool + 1][2 * arz + 1];
+        int[][] board = new int[2 * width + 1][2 * height + 1];
 
-        for (int i = 0; i < (2 * tool + 1); i++)
+        for (int i = 0; i < (2 * width + 1); i++)
             Arrays.fill(board[i], 1);
 
-        for (int i = 1; i < 2 * tool; i += 2)
-            for (int j = 1; j < 2 * arz; j += 2)
+        for (int i = 1; i < 2 * width; i += 2)
+            for (int j = 1; j < 2 * height; j += 2)
                 board[i][j] = 2;
 
-        move(0, 0, visited, tool, arz, board);
-        reduceWalls(board, tool, arz);
-        putEnergyBombs(board, tool, arz);
 
+        create(board, width, height);
+//        reduceWalls(board, tool, arz);
+        putEnergyBombs(board, width, height);
+
+
+//        System.out.println(Arrays.deepToString(board).replace("], ", "\n").replace("[[", "").replace("]]", "").replace("[", "").replace(", ", "").replace("2", "0"));
         return board;
-//        System.out.println(Arrays.deepToString(board).replace("], ", "\n").replace("[[", "").replace("]]", "").replace("[", "").replace(", ", "").replace("1", "*").replace("2", " "));
     }
 
 
     //******************************************************************************
     // harkat : 0: x++ 1: y-- 2: x-- 3: y++
-    public static void move(int xNow, int yNow, int[][] visitedBoard, int n, int m, int[][] mainBoard) {
-        visitedBoard[xNow][yNow] = 1;
-        int moveStatus = check(xNow, yNow, visitedBoard, n, m);
-        while (moveStatus != -1) {
-            switch (moveStatus) {
-                case 0:
-                    mainBoard[2 * xNow + 2][2 * yNow + 1] = 2;
-                    move(xNow + 1, yNow, visitedBoard, n, m, mainBoard);
-                    break;
 
-                case 1:
-                    mainBoard[2 * xNow + 1][2 * yNow] = 2;
-                    move(xNow, yNow - 1, visitedBoard, n, m, mainBoard);
-                    break;
-
-                case 2:
-                    mainBoard[2 * xNow][2 * yNow + 1] = 2;
-                    move(xNow - 1, yNow, visitedBoard, n, m, mainBoard);
-                    break;
-
-                case 3:
-                    mainBoard[2 * xNow + 1][2 * yNow + 2] = 2;
-                    move(xNow, yNow + 1, visitedBoard, n, m, mainBoard);
-                    break;
+    public static void create(int[][] board, int width, int height) {
+        int moveStatus;
+        for (int i = 1; i < 2 * width + 1; i += 2) {
+            for (int j = 1; j < 2 * height + 1; j += 2) {
+                do {
+                    moveStatus = addRandomEdge(board, i, j, width, height);
+                    if (moveStatus != -1)
+                        switch (moveStatus) {
+                            case 0:
+                                board[i + 1][j] = 2;
+                                break;
+                            case 1:
+                                board[i][j - 1] = 2;
+                                break;
+                            case 2:
+                                board[i - 1][j] = 2;
+                                break;
+                            case 3:
+                                board[i][j + 1] = 2;
+                                break;
+                        }
+                } while (countEdges(board, i, j, width, height) < 2);
             }
-
-            moveStatus = check(xNow, yNow, visitedBoard, n, m);
         }
     }
 
 
     //*****************************************************************************
-    public static int check(int xNow, int yNow, int[][] visitedBoard, int n, int m) {
-        Random random = new Random();
-        ArrayList<Integer> set = new ArrayList<>();
-        if ((xNow + 1) < n && visitedBoard[xNow + 1][yNow] == 1)
-            set.add(0);
-
-        if ((yNow - 1) >= 0 && visitedBoard[xNow][yNow - 1] == 1)
-            set.add(1);
-
-        if ((xNow - 1) >= 0 && visitedBoard[xNow - 1][yNow] == 1)
-            set.add(2);
-
-        if ((yNow + 1) < m && visitedBoard[xNow][yNow + 1] == 1)
-            set.add(3);
-
-        if (set.size() == 0)
-            return -1;
-        else {
-            int randNum = random.nextInt(12) % (set.size());
-            return (set.get(randNum));
-        }
-
-    }
 
     public static void reduceWalls(int[][] board, int width, int height) {
         Random random = new Random();
         for (int i = 1; i < 2 * width; i++) {
             for (int j = 1; j < 2 * height; j++)
                 if (board[i][j] == 1)
-                    if (random.nextInt(2) != 0)
+                    if (random.nextInt(3) == 0)
                         board[i][j] = 2;
-        }
-
-        for (int i = 1; i < 2 * width; i += 2) {
-            for (int j = 1; j < 2 * height; j += 2) {
-                if (board[i - 1][j] == 1 && board[i + 1][j] == 1
-                        && board[i][j - 1] == 1 && board[i][j + 1] == 1) {
-                    board[i+1][j] = 2;
-                    board[i-1][j] = 2;
-                }
-            }
         }
 
     }
@@ -117,5 +86,40 @@ public class BoardCreator {
         board[21][21] = 3;
         board[5][21] = 3;
         board[21][5] = 3;
+        board[13][13] = 4;
+        board[14][13] = 3;
+    }
+
+    public static int countEdges(int[][] board, int xNow, int yNow, int width, int height) {
+        int count = 0;
+        if ((xNow + 1) < 2 * width + 1 && board[xNow + 1][yNow] == 2) count++;
+        if ((yNow - 1) >= 0 && board[xNow][yNow - 1] == 2) count++;
+        if ((xNow - 1) >= 0 && board[xNow - 1][yNow] == 2) count++;
+        if ((yNow + 1) < 2 * height + 1 && board[xNow][yNow + 1] == 2) count++;
+
+        return count;
+    }
+
+    public static int addRandomEdge(int[][] board, int xNow, int yNow, int width, int height) {
+        Random random = new Random();
+        ArrayList<Integer> set = new ArrayList<>();
+        if ((xNow + 1) < 2 * width && board[xNow + 1][yNow] == 1)
+            set.add(0);
+
+        if ((yNow - 1) > 0 && board[xNow][yNow - 1] == 1)
+            set.add(1);
+
+        if ((xNow - 1) > 0 && board[xNow - 1][yNow] == 1)
+            set.add(2);
+
+        if ((yNow + 1) < 2 * height && board[xNow][yNow + 1] == 1)
+            set.add(3);
+
+        if (set.size() == 0)
+            return -1;
+        else {
+            int randNum = random.nextInt(12) % (set.size());
+            return (set.get(randNum));
+        }
     }
 }

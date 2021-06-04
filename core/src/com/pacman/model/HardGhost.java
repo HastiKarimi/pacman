@@ -1,5 +1,7 @@
 package com.pacman.model;
 
+import com.badlogic.gdx.graphics.Texture;
+
 public class HardGhost extends Ghost{
 
     public HardGhost(int row, int col, GameMap gameMap) {
@@ -17,7 +19,17 @@ public class HardGhost extends Ghost{
     }
 
     @Override
-    public void update() {
+    public void update(float delta) {
+
+    }
+
+    @Override
+    public void setImage(Texture texture) {
+
+    }
+
+    @Override
+    public void create() {
 
     }
 }

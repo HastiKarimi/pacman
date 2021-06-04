@@ -114,6 +114,7 @@ public class LoginMenu extends ScreenAdapter {
     }
 
     public boolean showMessage(String message, boolean isWarning) {
-        return mainClass.createDialog(message, isWarning, stage);
+        mainClass.createDialog(message, isWarning, stage, null);
+        return true;
     }
 }

@@ -30,8 +30,8 @@ public class MainClass extends Game {
     public void create() {
         setAssets();
         stage = new Stage();
-        setScreenToMainMenu();
-//        setScreenToGameScreen(null);
+//        setScreenToMainMenu();
+        setScreenToGameScreen(null);
     }
 
     @Override
@@ -121,18 +121,19 @@ public class MainClass extends Game {
         return textField;
     }
 
-    public boolean createDialog(String message, boolean isWarning, Stage stage) {
+    public void createDialog(String message, boolean isWarning, Stage stage, Screen screen) {
         //TODO success box doesn't show.
         Dialog dialog;
-        MainClass.isSuccessful = false;
         String title = "Success Message";
         if (isWarning) title = "Error";
 
         dialog = new Dialog(title, skin2Json, "dialog"){
             @Override
             protected void result(Object object) {
-                if((Boolean) object)
-                    MainClass.isSuccessful = true;
+                if((Boolean) object) {
+//                    if (!isWarning)
+//                        setScreen(screen);
+                }
             }
         };
         dialog.getBackground().setMinWidth(400);
@@ -141,11 +142,6 @@ public class MainClass extends Game {
         dialog.button("Ok", true); //sends "true" as the result
         dialog.key(Input.Keys.ENTER, true); //sends "true" when the ENTER key is pressed
         dialog.show(stage);
-
-//        while (true)
-//            if (MainClass.isSuccessful)
-//                return true;
-        return MainClass.isSuccessful;
     }
 
     public void setAssets() {

@@ -1,6 +1,7 @@
 package com.pacman.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -69,10 +70,11 @@ public class SignUpMenu extends ScreenAdapter {
                         usernameTextField.getText(), passwordTextField.getText()
                         , confirmPasswordTextField.getText());
 
-                if (!answer.first && showMessage(answer.second, false)) {
-                    mainClass.setScreenToMainMenu();
+                if (!answer.first ) {
+                    showMessage(answer.second, false, new MainMenu(mainClass));
+//                    mainClass.setScreenToMainMenu();
                 } else {
-                    if (answer.first)  showMessage(answer.second, true);
+//                    if (answer.first)  showMessage(answer.second, true);
                     usernameTextField.setText("");
                     passwordTextField.setText("");
                     confirmPasswordTextField.setText("");
@@ -122,7 +124,7 @@ public class SignUpMenu extends ScreenAdapter {
 
     }
 
-    public boolean showMessage(String message, boolean isWarning) {
-        return mainClass.createDialog(message, isWarning, stage);
+    public void showMessage(String message, boolean isWarning, Screen screen) {
+        mainClass.createDialog(message, isWarning, stage, screen);
     }
 }

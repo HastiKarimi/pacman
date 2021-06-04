@@ -1,8 +1,7 @@
 package com.pacman.model;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.graphics.g2d.Batch;
 
 public abstract class Ghost extends Entity {
     public Texture otherImage;
@@ -16,5 +15,15 @@ public abstract class Ghost extends Entity {
 
     public void resetPosition() {
 
+    }
+
+    @Override
+    public void update(float delta) {
+
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
     }
 }

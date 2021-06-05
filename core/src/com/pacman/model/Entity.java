@@ -2,18 +2,14 @@ package com.pacman.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.pacman.tools.timer.ExampleTimer;
 
 public abstract class Entity extends Actor {
     public Rectangle shape;
     public Texture nowImage;
-    public Vector2 pos;
-    public int speed = 20;
-    public float velocity = (float) (1 / 3.0);
+    public int speed = 60;
     public boolean isEnergyMode;
     public int size;
     public GameMap gameMap;
@@ -24,15 +20,36 @@ public abstract class Entity extends Actor {
         isEnergyMode = false;
     }
 
-    public Entity(int row, int col, GameMap gameMap) {
+    public Entity(int col, int row, GameMap gameMap) {
         this.gameMap = gameMap;
-//        pos = new Vector2(row * size + gameMap.spaceX, col * size + gameMap.spaceY);
         size = TileType.TILE_SIZE;
         shape = new Rectangle();
-        shape.x = row * size + gameMap.spaceX;
-        shape.y = col * size + gameMap.spaceY;
+        shape.x = col * size + gameMap.spaceX;
+        shape.y = row * size + gameMap.spaceY;
         shape.width = size;
         shape.height = size;
+    }
+
+    public boolean isCollided(Move moveCondition, float delta) {
+        TileType tileType;
+        switch (moveCondition) {
+            case UP:
+                tileType = gameMap.getTileTypeByLocation(0, getMiddleXOfShape(), getMiddleYOfShape() + (float) (size / 2.0) + speed * delta);
+                break;
+            case DOWN:
+                tileType = gameMap.getTileTypeByLocation(0, getMiddleXOfShape(), getMiddleYOfShape() - (float) (size / 2.0) - speed * delta);
+                break;
+            case RIGHT:
+                tileType = gameMap.getTileTypeByLocation(0, getMiddleXOfShape() + (float) (size / 2.0) + speed * delta, getMiddleYOfShape());
+                break;
+            case LEFT:
+                tileType = gameMap.getTileTypeByLocation(0, getMiddleXOfShape() - (float) (size / 2.0) - speed * delta, getMiddleYOfShape());
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + moveCondition);
+        }
+
+        return tileType.isCollidable();
     }
 
     @Override
@@ -42,7 +59,9 @@ public abstract class Entity extends Actor {
 
     public abstract void timerEnd();
 
-    public abstract void setSizeOfEntity(int sizeOfEntity);
+    public void setSizeOfEntity(int sizeOfEntity){
+        this.size = sizeOfEntity;
+    };
 
     public abstract void update(float delta);
 
@@ -54,17 +73,6 @@ public abstract class Entity extends Actor {
         int newX = ((int) (rectangle.x - gameMap.spaceX + size / 2)) / TileType.TILE_SIZE;
         int newY = ((int) (rectangle.y - gameMap.spaceY + size / 2)) / TileType.TILE_SIZE;
 
-//        newX -= gameMap.spaceX;
-//        newY -= gameMap.spaceY;
-//
-//        newX = newX / TileType.TILE_SIZE;
-//        newY = newY / TileType.TILE_SIZE;
-//
-//        newX *= TileType.TILE_SIZE;
-//        newY *= TileType.TILE_SIZE;
-//        newX += gameMap.spaceX;
-//        newY += gameMap.spaceY;
-
         rectangle.x = (float) (newX * TileType.TILE_SIZE + gameMap.spaceX);
         rectangle.y = (float) (newY * TileType.TILE_SIZE + gameMap.spaceY);
     }
@@ -75,5 +83,24 @@ public abstract class Entity extends Actor {
 
     public float getMiddleYOfShape() {
         return shape.y + shape.height / 2;
+    }
+
+    public abstract void move(float delta);
+
+    public void doTheMove(float delta) {
+        switch (moveCondition) {
+            case UP:
+                shape.y += speed * delta;
+                break;
+            case DOWN:
+                shape.y -= speed * delta;
+                break;
+            case RIGHT:
+                shape.x += speed * delta;
+                break;
+            case LEFT:
+                shape.x -= speed * delta;
+                break;
+        }
     }
 }

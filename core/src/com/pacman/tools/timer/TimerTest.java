@@ -6,15 +6,15 @@ public class TimerTest {
 //		Timer oneSecondInfiniteTimer = new ExampleTimer();
 		
 		//This creates a timer which ticks every 2 seconds, and runs for 20 seconds.
-		Timer twoSecondTimer = new ExampleTimer(2000l, 20000l);
-		
-		//Start the timer.
-		twoSecondTimer.start();
-		
-		//Pause the timer.
-		twoSecondTimer.pause();
-		
-		//Resume the timer
-		twoSecondTimer.resume();
+//		Timer twoSecondTimer = new ExampleTimer(2000l, 20000l);
+//
+//		//Start the timer.
+//		twoSecondTimer.start();
+//
+//		//Pause the timer.
+//		twoSecondTimer.pause();
+//
+//		//Resume the timer
+//		twoSecondTimer.resume();
 	}
 }

@@ -24,6 +24,11 @@ public class HardGhost extends Ghost{
     }
 
     @Override
+    public void move(float delta) {
+
+    }
+
+    @Override
     public void setImage(Texture texture) {
 
     }

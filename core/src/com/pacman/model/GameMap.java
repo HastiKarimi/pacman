@@ -1,13 +1,16 @@
 package com.pacman.model;
 
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.pacman.screens.game.GameScreen;
-import com.pacman.tools.timer.ExampleTimer;
+import jdk.javadoc.internal.doclets.formats.html.markup.Table;
+
+import java.util.HashMap;
 
 public class GameMap extends Actor {
     public int spaceX = 40; //2.5 * 16
@@ -19,19 +22,17 @@ public class GameMap extends Actor {
 
     public Pacman pacman;
     public Ghost[] ghosts;
-    public ExampleTimer gameTimer;
-    public Texture ghostsSheet;
+    public boolean isGamePaused = false;
 
 
-    private TextureRegion[][] tiles;
+    private final TextureRegion[][] tiles;
 
     public GameMap(GameScreen gameScreen, int[][] map) {
         this.gameScreen = gameScreen;
         this.map = map;
-
+        ghosts = new Ghost[4];
         tiles = TextureRegion.split(new Texture("tile.png"), TileType.TILE_SIZE, TileType.TILE_SIZE);
-        ghostsSheet = new Texture(Gdx.files.internal("ghosts.png"));
-        TextureRegion[][] tmp = TextureRegion.split(ghostsSheet, TileType.TILE_SIZE, TileType.TILE_SIZE);
+        createFramesForOtherAnimation();
     }
 
     @Override
@@ -60,7 +61,6 @@ public class GameMap extends Actor {
         if (col < 0 || col >= getWidthOfMap() || row < 0 || row >= getHeightOfMap())
             return null;
 
-
         return TileType.getTileTypeById(map[row][col]);
     }
 
@@ -84,7 +84,45 @@ public class GameMap extends Actor {
     }
 
     public void update(float delta) {
-        pacman.update(delta);
+        if (!isGamePaused) {
+            pacman.update(delta);
+            for (Ghost ghost : ghosts) {
+                ghost.update(delta);
+            }
+
+            for (Ghost ghost : ghosts) {
+                if (pacman.shape.overlaps(ghost.shape) && ghost.isAvailable) {
+                    pacman.overlapWithGhost(ghost);
+                    break;
+                }
+            }
+        } else
+            processMovingKeys();
+    }
+
+    public void processMovingKeys() {
+        if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.RIGHT) ||
+                Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.UP)) {
+            isGamePaused = false;
+        }
+    }
+
+
+    public void createFramesForOtherAnimation() {
+        HashMap<Move, TextureRegion[]> frames = Ghost.otherFrames;
+        Texture energyGhostSheet = new Texture(Gdx.files.internal("energy-ghost.png"));
+        TextureRegion[][] otherTmp = TextureRegion.split(energyGhostSheet,
+                TileType.TILE_SIZE, TileType.TILE_SIZE);
+
+        int j = 0;
+        for (Move move : new Move[]{Move.DOWN, Move.LEFT, Move.RIGHT, Move.UP}) {
+            TextureRegion[] textureRegion = new TextureRegion[6];
+            for (int i = 0; i < 6; i++) {
+                textureRegion[i] = otherTmp[j][i];
+            }
+            frames.put(move, textureRegion);
+            j++;
+        }
     }
 
 

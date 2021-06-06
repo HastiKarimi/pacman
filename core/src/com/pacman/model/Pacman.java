@@ -6,21 +6,21 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class Pacman extends Entity {
-    public int life;
+    public int life;    //TODO create data for GameScreen
     public int eatenGhosts = 0;
-    public boolean isCollidedWithWall = false;
-    public Move nextMove;
     public int score = 0;
+    public boolean isEnergyMode = false;
 
-    public Pacman(int row, int col, GameMap gameMap) {
-        super(row, col, gameMap);
+    public Pacman(int col, int row, GameMap gameMap) {
+        super(col, row, gameMap);
         create();
     }
 
     public void eatGhost(Ghost ghost) {
         eatenGhosts++;
-        ghost.resetPosition();
+        ghost.resetPosition(true);
         score += 200 * eatenGhosts;
+        ghost.resetPosition(true);
     }
 
     public void eatNormalFood() {
@@ -29,10 +29,13 @@ public class Pacman extends Entity {
 
     public void eatEnergyBomb() {
         score += 0;
+        isEnergyMode = true;
+        setTimer(10f);
     }
 
     public void disableEnergyBomb() {
         eatenGhosts = 0;
+        isEnergyMode = false;
     }
 
     @Override
@@ -42,16 +45,14 @@ public class Pacman extends Entity {
 
     @Override
     public void timerEnd() {
-
+        disableEnergyBomb();
     }
 
-    @Override
-    public void setSizeOfEntity(int sizeOfEntity) {
-
-    }
 
     @Override
     public void update(float delta) {
+        isTimerEnded();
+
         if (Gdx.input.isKeyPressed(Keys.UP)) {
             if (moveCondition != Move.UP) {
                 if (!isCollided(Move.UP, delta)) {
@@ -93,6 +94,7 @@ public class Pacman extends Entity {
 
 
         move(delta);
+//        TileType tileType = gameMap.getTileTypeByLocation(0, getMiddleXOfShape(), getMiddleYOfShape());
         switch (gameMap.getTileTypeByLocation(0, getMiddleXOfShape(), getMiddleYOfShape())) {
             case FOOD:
                 gameMap.eatTileTypeContent(0, getMiddleXOfShape(), getMiddleYOfShape());
@@ -117,6 +119,19 @@ public class Pacman extends Entity {
         moveCondition = Move.UP;
         nowImage = new Texture(Gdx.files.internal("pacman.png"));
         setImage(nowImage);
+        setSpeed(60);
+    }
+
+    @Override
+    public void resetPosition(boolean isEaten) {
+        if (isEaten) {
+            for (Ghost ghost : gameMap.ghosts)
+                ghost.resetPosition(false);
+
+            setShape(firstCol, firstRow);
+        }
+
+
     }
 
     public void move(float delta) {
@@ -124,6 +139,19 @@ public class Pacman extends Entity {
             doTheMove(delta);
         } else {
             putAtMiddleOfTile(shape);
+        }
+    }
+
+    public void overlapWithGhost(Ghost ghost) {
+        if (isEnergyMode) {
+            eatGhost(ghost);
+        } else {
+            life--;
+            gameMap.isGamePaused = true;
+            if (life == 0) {
+                gameMap.gameScreen.gameOver();
+            }
+            this.resetPosition(true);
         }
     }
 }

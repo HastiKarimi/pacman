@@ -86,8 +86,7 @@ public class BoardCreator {
         board[21][21] = 3;
         board[5][21] = 3;
         board[21][5] = 3;
-        board[13][13] = 4;
-        board[14][13] = 3;
+        board[14][14] = 4;
     }
 
     public static int countEdges(int[][] board, int xNow, int yNow, int width, int height) {

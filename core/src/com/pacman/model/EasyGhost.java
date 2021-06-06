@@ -6,14 +6,8 @@ import java.util.ArrayList;
 
 public class EasyGhost extends Ghost{
 
-    public EasyGhost(int row, int col, GameMap gameMap, Move firstMove) {
-        super(row, col, gameMap, firstMove);
-    }
-
-    @Override
-    public void timerEnd() {
-        canMove = true;
-        moveCondition = firstMove;
+    public EasyGhost(int col, int row, GameMap gameMap, Move firstMove, int startRowAnimation, int startColAnimation) {
+        super(col, row, gameMap, firstMove, startRowAnimation ,startColAnimation );
     }
 
     @Override

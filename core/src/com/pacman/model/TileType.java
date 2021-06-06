@@ -6,8 +6,8 @@ import java.util.HashMap;
 
 public enum TileType {
     WALL(1, true),
-    ENERGY_BOMB(2, false),
-    FOOD(3, false),
+    FOOD(2, false),
+    ENERGY_BOMB(3, false),
     NONE(4, false);
 
     public static int TILE_SIZE = 16;

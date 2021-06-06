@@ -33,10 +33,10 @@ public class UserMenu extends ScreenAdapter {
         buttonPlay.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //TODO
+                mainClass.setScreenToPreGameScreen(user);
             }
         });
-        table.add(buttonPlay).minWidth(300).expandX();
+        table.add(buttonPlay).minWidth(400).expandX();
         table.row();
 
 
@@ -47,7 +47,7 @@ public class UserMenu extends ScreenAdapter {
                 //TODO
             }
         });
-        table.add(buttonShowScoreboard).minWidth(300).expandX();
+        table.add(buttonShowScoreboard).minWidth(400).expandX();
         table.row();
 
         buttonChangePassword = mainClass.createButton("Change Password");
@@ -57,7 +57,7 @@ public class UserMenu extends ScreenAdapter {
                 mainClass.setScreenToChangePasswordMenu(user);
             }
         });
-        table.add(buttonChangePassword).minWidth(300).expandX();
+        table.add(buttonChangePassword).minWidth(400).expandX();
         table.row();
 
 
@@ -68,7 +68,7 @@ public class UserMenu extends ScreenAdapter {
                 //TODO
             }
         });
-        table.add(buttonDeleteAccount).minWidth(300).expandX();
+        table.add(buttonDeleteAccount).minWidth(400).expandX();
         table.row();
 
 
@@ -79,7 +79,7 @@ public class UserMenu extends ScreenAdapter {
                 mainClass.setScreenToMainMenu();
             }
         });
-        table.add(buttonLogout).minWidth(300);
+        table.add(buttonLogout).minWidth(400);
         table.row();
 
 

@@ -1,37 +1,48 @@
 package com.pacman.model;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Rectangle;
-import com.pacman.tools.timer.ExampleTimer;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public abstract class Ghost extends Entity {
     public Random random;
-    public Texture otherImage;
-    public int firstRow, firstCol;
     public boolean canMove = false;
     public Move firstMove;
+    public boolean isAvailable = false;
+    public Animation<TextureRegion> walkAnimation;
+    public static Animation<TextureRegion> otherAnimation;
+    public static HashMap<Move, TextureRegion[]> otherFrames;
+
+    static {
+        otherFrames = new HashMap<>();
+    }
 
     {
         random = new Random();
     }
 
-    public Ghost(int row, int col, GameMap gameMap, Move firstMove) {
-        super(row, col, gameMap);
+    public Ghost(int col, int row, GameMap gameMap, Move firstMove, int startRowAnimation, int startColAnimation) {
+        super(col, row, gameMap);
         firstRow = row;
         firstCol = col;
         this.firstMove = firstMove;
         moveCondition = firstMove;
+        create(startRowAnimation, startColAnimation);
     }
 
-    public void resetPosition() {
+    public void resetPosition(boolean isEaten) {
         shape.x = firstCol * size + gameMap.spaceX;
         shape.y = firstRow * size + gameMap.spaceY;
-        myTimer = new ExampleTimer(this,20000L, 5000L);
         canMove = false;
+        if (isEaten)    setTimer(5.f);
+        else    setTimer(2f);
+
+        isAvailable = false;
     }
 
     public ArrayList<Move> capableOfMoves(float delta) {
@@ -39,7 +50,7 @@ public abstract class Ghost extends Entity {
 
         for (Move move : new Move[]{Move.UP, Move.DOWN, Move.LEFT, Move.RIGHT}) {
             if (moveCondition != move) {
-                if (!isCollided(moveCondition, delta))
+                if (!isCollided(move, delta))
                     probableMoves.add(move);
             }
         }
@@ -49,13 +60,51 @@ public abstract class Ghost extends Entity {
 
     @Override
     public void update(float delta) {
-        if (canMove) {
+        if (canMove || isTimerEnded()) {
             move(delta);
         }
     }
 
     @Override
+    public void timerEnd() {
+        canMove = true;
+        moveCondition = firstMove;
+        isAvailable = true;
+    }
+
+    @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
+        batch.draw(setAnimation().getKeyFrame(gameMap.gameScreen.stateTime, true)
+                , shape.x, shape.y);
+    }
+
+    public void create(int startRowAnimation, int startColAnimation) {
+        createFrames(startRowAnimation, startColAnimation);
+        setTimer(2f);
+        setSpeed(50);
+    }
+
+    public void createFrames(int startRow, int startCol) {
+        myFrames = new HashMap<>();
+        for (Move move : new Move[]{Move.DOWN, Move.LEFT, Move.RIGHT, Move.UP}) {
+            TextureRegion[] textureRegion = new TextureRegion[6];
+            for (int i = startCol; i < startCol + 6; i++) {
+                textureRegion[i - startCol] = gameMap.gameScreen.tmp[startRow][i];
+            }
+            myFrames.put(move, textureRegion);
+            startRow++;
+        }
+    }
+
+    public Animation<TextureRegion> setAnimation() {
+        if (!gameMap.pacman.isEnergyMode) {
+            walkAnimation = new Animation<TextureRegion>(0.25f
+                    , myFrames.get(moveCondition));
+            return walkAnimation;
+        } else {
+            otherAnimation = new Animation<TextureRegion>(0.25f,
+                    otherFrames.get(moveCondition));
+            return otherAnimation;
+        }
     }
 }

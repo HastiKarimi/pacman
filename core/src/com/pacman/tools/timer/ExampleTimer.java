@@ -16,12 +16,13 @@ public class ExampleTimer extends Timer{
 
 	@Override
 	protected void onTick() {
-
+		System.out.println("bye");
 	}
 
 	@Override
 	protected void onFinish() {
 		entity.timerEnd();
+		System.out.println("hello");
 	}
 	
 }

@@ -21,6 +21,7 @@ public class LoginMenu extends ScreenAdapter {
     Label usernameLabel, passwordLabel;
     TextField usernameTextField, passwordTextField, confirmPasswordTextField;
     Table table;
+    public ScreenType isWaitingForScreen;
 
     {
         loginMenuController = new LoginMenuController(this);
@@ -46,6 +47,7 @@ public class LoginMenu extends ScreenAdapter {
         table.add(passwordLabel);
         table.add(passwordTextField).width(300).height(60).row();
 
+
         buttonLogin = mainClass.createButton("Login");
         buttonLogin.padTop(20);
         buttonLogin.addListener(new ClickListener(){
@@ -53,28 +55,19 @@ public class LoginMenu extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 Pair answer = loginMenuController.processInfo(
                         usernameTextField.getText(), passwordTextField.getText());
-                if (answer.first && showMessage(answer.second, false)) {
-                    mainClass.setScreenToUserMenu(loginMenuController.getUser());
+                if (answer.first) {
+                    showMessage(answer.second, false);
                 } else {
-                    if (!answer.first)  showMessage(answer.second, true);
+                    showMessage(answer.second, true);
                     usernameTextField.setText("");
                     passwordTextField.setText("");
                 }
-//                if (loginMenuController.processInfo(usernameTextField.getText(),
-//                        passwordTextField.getText())) {
-//                    //TODO success dialog is not shown
-//                    mainClass.setScreenToUserMenu(loginMenuController.getUser());
-//                } else {
-//                    usernameTextField.setText("");
-//                    passwordTextField.setText("");
-//                }
             }
         });
         table.add(buttonLogin).colspan(2).width(250).align(Align.center).padTop(50);
         table.row();
 
 
-//        table.debug();
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
     }
@@ -83,6 +76,11 @@ public class LoginMenu extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClearColor(0,0,0.8f,1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if (MainClass.isSuccessful) {
+            MainClass.isSuccessful = false;
+            mainClass.setScreenToUserMenu(loginMenuController.getUser());
+        }
 
         stage.act(delta);
         stage.draw();
@@ -114,7 +112,7 @@ public class LoginMenu extends ScreenAdapter {
     }
 
     public boolean showMessage(String message, boolean isWarning) {
-        mainClass.createDialog(message, isWarning, stage, null);
+        mainClass.createDialog(message, isWarning, stage);
         return true;
     }
 }

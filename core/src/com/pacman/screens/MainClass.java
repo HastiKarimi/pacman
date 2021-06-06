@@ -13,6 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Align;
 import com.pacman.model.User;
 import com.pacman.screens.game.GameScreen;
+import com.pacman.screens.game.PreGameScreen;
+
+import java.util.HashMap;
 
 
 public class MainClass extends Game {
@@ -24,14 +27,15 @@ public class MainClass extends Game {
     public TextureAtlas textureAtlas2;   //freezing
     public Skin skin2;
     public Skin skin2Json;
-    public static boolean isSuccessful;
+    public static boolean isSuccessful = false;
 
     @Override
     public void create() {
         setAssets();
         stage = new Stage();
-//        setScreenToMainMenu();
-        setScreenToGameScreen(null);
+        setScreenToMainMenu();
+//        setScreenToGameScreen(null);
+//        setScreenToPreGameScreen(null);
     }
 
     @Override
@@ -59,12 +63,12 @@ public class MainClass extends Game {
         setScreen(new ChangePasswordMenu(this, user));
     }
 
-    public void setScreenToPlayMenu(User user) {
-        //TODO
+    public void setScreenToPreGameScreen(User user) {
+        setScreen(new PreGameScreen(this, user));
     }
 
-    public void setScreenToGameScreen(User user) {
-        setScreen(new GameScreen(this, user));
+    public void setScreenToGameScreen(User user, HashMap<String, Object> data) {
+        setScreen(new GameScreen(this, user, data));
     }
 
     @Override
@@ -108,31 +112,21 @@ public class MainClass extends Game {
     public TextField createTextField(String text) {
         //TODO try to fix the bug
         Skin skin = new Skin(Gdx.files.internal("freezing/skin/freezing-ui.json"));
-//        TextFieldStyle textFieldStyle = new TextFieldStyle();
-//        textFieldStyle.font = blackFont;
-//        textFieldStyle.fontColor = Color.BLACK;
-//        textFieldStyle.cursor = skin1.newDrawable("cursor", Color.GREEN);
-//        textFieldStyle.cursor.setMinWidth(2f);
-////        tStyle.cursor = skin.newDrawable("cursor", Color.GREEN);
-////        tStyle.cursor.setMinWidth(2f);
-//        textFieldStyle.selection = skin1.getDrawable("selection");
-//        textFieldStyle.background = skin1.getDrawable("textfield");
         TextField textField = new TextField(text, skin);
         return textField;
     }
 
-    public void createDialog(String message, boolean isWarning, Stage stage, Screen screen) {
+    public void createDialog(String message, boolean isWarning, Stage stage) {
         //TODO success box doesn't show.
         Dialog dialog;
         String title = "Success Message";
         if (isWarning) title = "Error";
 
-        dialog = new Dialog(title, skin2Json, "dialog"){
+        dialog = new Dialog(title, skin2Json, "dialog") {
             @Override
             protected void result(Object object) {
-                if((Boolean) object) {
-//                    if (!isWarning)
-//                        setScreen(screen);
+                if ((Boolean) object) {
+                    MainClass.isSuccessful = true;
                 }
             }
         };

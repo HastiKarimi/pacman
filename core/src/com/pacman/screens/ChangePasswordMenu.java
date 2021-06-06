@@ -61,10 +61,10 @@ public class ChangePasswordMenu extends ScreenAdapter { //done
                 Pair answer = changePasswordController.processInfo(prePasTextField.getText(),
                         newPasTextField.getText(), confirmPasTextField.getText());
                 if (answer.first) {
-                    showMessage(answer.second, false, new UserMenu(mainClass, user));
-//                    mainClass.setScreenToUserMenu(user);
+                    showMessage(answer.second, false);
                 } else {
-//                    if (!answer.first)  showMessage(answer.second, true);
+//                    if (!answer.first)
+                    showMessage(answer.second, true);
                     prePasTextField.setText("");
                     newPasswordLabel.setText("");
                     confirmPasTextField.setText("");
@@ -83,6 +83,11 @@ public class ChangePasswordMenu extends ScreenAdapter { //done
     public void render(float delta) {
         Gdx.gl.glClearColor(0,0,0.8f,1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if (MainClass.isSuccessful) {
+            MainClass.isSuccessful = false;
+            mainClass.setScreenToUserMenu(user);
+        }
 
         stage.act(delta);
         stage.draw();
@@ -113,7 +118,7 @@ public class ChangePasswordMenu extends ScreenAdapter { //done
 
     }
 
-    public void showMessage(String message, boolean isWarning, Screen screen) {
-        mainClass.createDialog(message, isWarning, stage, screen);
+    public void showMessage(String message, boolean isWarning) {
+        mainClass.createDialog(message, isWarning, stage);
     }
 }

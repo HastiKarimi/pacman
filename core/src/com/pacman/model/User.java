@@ -40,6 +40,11 @@ public class User implements Comparable {
         return password;
     }
 
+    public void setHighScore(int score) {
+        highScore = score;
+        timeOfHighScore = LocalDateTime.now();
+    }
+
     @Override
     public int compareTo(Object o) {
         if (o == null)

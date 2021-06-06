@@ -14,14 +14,12 @@ public class SignUpMenuController {
 
     public Pair processInfo(String username, String password, String confirmPassword) {
         if (User.findUser(username) != null) {
-//            signUpMenu.showMessage(Messages.USER_EXIST.getMessages(), true);
-            return new Pair(true, Messages.USER_DOESNT_EXIST.getMessages());
+            return new Pair(true, Messages.USER_EXIST.getMessages());
         } else if (!password.equals(confirmPassword)) {
-//            signUpMenu.showMessage(Messages.PASSWORDS_DONT_MATCH.getMessages(), true);
-            return new Pair(true, Messages.USER_DOESNT_EXIST.getMessages());
+            return new Pair(true, Messages.PASSWORDS_DONT_MATCH.getMessages());
         }
 
-//        signUpMenu.showMessage(Messages.REGISTER_SUCCESSFUL.getMessages(), false);
+
         new User(username, password);   //TODO
         return new Pair(false, Messages.REGISTER_SUCCESSFUL.getMessages());
     }

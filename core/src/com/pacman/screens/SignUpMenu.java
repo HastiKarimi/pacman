@@ -23,6 +23,7 @@ public class SignUpMenu extends ScreenAdapter {
     TextField usernameTextField, passwordTextField, confirmPasswordTextField;
     Table table;
 
+
     {
         signUpMenuController = new SignUpMenuController(this);
         this.stage = new Stage(new ExtendViewport(1024, 1024));
@@ -53,28 +54,17 @@ public class SignUpMenu extends ScreenAdapter {
 
         buttonRegister = mainClass.createButton("Register");
         buttonRegister.padTop(20);
-        buttonRegister.addListener(new ClickListener(){
+        buttonRegister.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-//                if (signUpMenuController.processInfo(usernameTextField.getText(),
-//                        passwordTextField.getText(), confirmPasswordTextField.getText())) {
-//                    //TODO success dialog is not shown
-//                    mainClass.setScreenToMainMenu();
-//                } else {
-//                    usernameTextField.setText("");
-//                    passwordTextField.setText("");
-//                    confirmPasswordTextField.setText("");
-//                }
-
                 Pair answer = signUpMenuController.processInfo(
                         usernameTextField.getText(), passwordTextField.getText()
                         , confirmPasswordTextField.getText());
 
-                if (!answer.first ) {
-                    showMessage(answer.second, false, new MainMenu(mainClass));
-//                    mainClass.setScreenToMainMenu();
+                if (!answer.first) {
+                    showMessage(answer.second, false);
                 } else {
-//                    if (answer.first)  showMessage(answer.second, true);
+                    showMessage(answer.second, true);
                     usernameTextField.setText("");
                     passwordTextField.setText("");
                     confirmPasswordTextField.setText("");
@@ -85,15 +75,19 @@ public class SignUpMenu extends ScreenAdapter {
         table.row();
 
 
-//        table.debug();
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0,0,0.8f,1);
+        Gdx.gl.glClearColor(0, 0, 0.8f, 1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if (MainClass.isSuccessful) {
+            MainClass.isSuccessful = false;
+            mainClass.setScreenToMainMenu();
+        }
 
         stage.act(delta);
         stage.draw();
@@ -124,7 +118,7 @@ public class SignUpMenu extends ScreenAdapter {
 
     }
 
-    public void showMessage(String message, boolean isWarning, Screen screen) {
-        mainClass.createDialog(message, isWarning, stage, screen);
+    public void showMessage(String message, boolean isWarning) {
+        mainClass.createDialog(message, isWarning, stage);
     }
 }

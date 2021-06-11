@@ -2,6 +2,7 @@ package com.pacman.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pacman.MainClass;
 import com.pacman.model.Wallpaper;
 import com.pacman.tools.Pair;
@@ -28,7 +29,7 @@ public class ChangePasswordMenu extends ScreenAdapter { //done
     User user;
 
     {
-        this.stage = new Stage(new ExtendViewport(1024, 1024));
+        this.stage = new Stage(new StretchViewport(1024, 1024));
     }
 
     public ChangePasswordMenu(MainClass mainClass, User user) {
@@ -62,10 +63,9 @@ public class ChangePasswordMenu extends ScreenAdapter { //done
             public void clicked(InputEvent event, float x, float y) {
                 Pair answer = changePasswordController.processInfo(prePasTextField.getText(),
                         newPasTextField.getText(), confirmPasTextField.getText());
-                if (answer.first) {
+                if (!answer.first) {
                     showMessage(answer.second, false);
                 } else {
-//                    if (!answer.first)
                     showMessage(answer.second, true);
                     prePasTextField.setText("");
                     newPasswordLabel.setText("");

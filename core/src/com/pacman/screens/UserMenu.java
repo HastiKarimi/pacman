@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pacman.MainClass;
 import com.pacman.model.User;
 import com.pacman.model.Wallpaper;
@@ -23,7 +24,7 @@ public class UserMenu extends ScreenAdapter {
     User user;
 
     public UserMenu(MainClass mainClass, User user) {
-        this.stage = new Stage(new ExtendViewport(1024, 1024));
+        this.stage = new Stage(new StretchViewport(1024, 1024));
         this.mainClass = mainClass;
         this.user = user;
     }

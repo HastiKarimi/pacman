@@ -28,7 +28,7 @@ public class MainMenu extends ScreenAdapter {
     TextButton buttonExit, buttonPlay, buttonLogin, buttonSignUp;
     Skin skin;
     Table table;
-    Wallpaper wallpaper;
+
 
     public MainMenu(MainClass mainClass) {
         this.stage = new Stage(new StretchViewport(1024, 1024));

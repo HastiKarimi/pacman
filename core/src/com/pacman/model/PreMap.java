@@ -1,12 +1,10 @@
 package com.pacman.model;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.google.gson.Gson;
 import com.pacman.tools.boardcreator.BoardCreator;
 
 import java.util.ArrayList;
@@ -19,7 +17,7 @@ public class PreMap extends Actor {
     public static ArrayList<int[][]> defaultMaps;
 
     static {
-        tiles = TextureRegion.split(new Texture("tile.png"), TileType.TILE_SIZE, TileType.TILE_SIZE);
+        tiles = TextureRegion.split(new Texture("tiles.png"), 150, 150);
     }
 
     public PreMap(User user) {
@@ -34,7 +32,8 @@ public class PreMap extends Actor {
                 for (int col = 0; col < getWidthOfMap(); col++) {
                     TileType type = this.getTileTypeByCoordinate(layer, col, row);
                     if (type != null && type.getId() != 4)
-                        batch.draw(tiles[0][type.getId() - 1], col * TileType.TILE_SIZE + 40, row * TileType.TILE_SIZE + 150);
+                        batch.draw(tiles[0][type.getId() - 1], col * TileType.TILE_SIZE + 40,
+                                row * TileType.TILE_SIZE + 150, TileType.TILE_SIZE, TileType.TILE_SIZE);
                 }
             }
         }

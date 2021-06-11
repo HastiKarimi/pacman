@@ -1,6 +1,7 @@
 package com.pacman.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pacman.MainClass;
 import com.pacman.model.Wallpaper;
 import com.pacman.tools.Pair;
@@ -21,13 +22,13 @@ public class LoginMenu extends ScreenAdapter {
     Stage stage;
     TextButton buttonLogin;
     Label usernameLabel, passwordLabel;
-    TextField usernameTextField, passwordTextField, confirmPasswordTextField;
+    TextField usernameTextField, passwordTextField;
     Table table;
     public ScreenType isWaitingForScreen;
 
     {
         loginMenuController = new LoginMenuController(this);
-        this.stage = new Stage(new ExtendViewport(1024, 1024));
+        this.stage = new Stage(new StretchViewport(1024, 1024));
     }
 
     public LoginMenu(MainClass mainClass) {

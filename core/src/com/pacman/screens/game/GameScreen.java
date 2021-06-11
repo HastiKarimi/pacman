@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pacman.MainClass;
 import com.pacman.model.*;
@@ -25,13 +27,15 @@ public class GameScreen implements Screen {
     MainClass mainClass;
     User user;
     GameMap gameMap;
-    public boolean isGameEnded;
-    public TextureRegion tmp[][];
+    public boolean isGameEnded, mainPause;
+    public TextureRegion tmp_ghost[][];
+    public TextureRegion tmp_pacman[][];
+    Texture pauseImage;
     public float stateTime = 0f;
     public Label scoreLabel, lifeLabel;
     public ScreenType waitingScreen;
-    public Sound pacmanEats, pacmanDies, ghostsDie, gameOverSound;
-    public ImageButton muteButton;
+    public Sound pacmanEats, pacmanDies, ghostsDie, gameOverSound, energyBombEaten;
+    public ImageButton muteButton, pauseButton;
 
     public GameScreen(MainClass mainClass, User user, HashMap<String, Object> data) {
         assembleAnimations();
@@ -39,6 +43,8 @@ public class GameScreen implements Screen {
         this.mainClass = mainClass;
         stage = new Stage(new StretchViewport(512, 512));
         extractData(data);
+        pauseImage = new Texture(Gdx.files.internal("pause1.png"));
+        mainPause = false;
     }
 
 
@@ -80,22 +86,52 @@ public class GameScreen implements Screen {
         if (gameMap.soundRatio == 0)
             muteButton.setChecked(true);
 
+        pauseButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseImage)));
+        pauseButton.setBounds(241,7,30,30);
+        pauseButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                mainPause = true;
+                Dialog dialog = new Dialog("confirmation", mainClass.skin3Json, "dialog"){
+                    @Override
+                    protected void result(Object object) {
+                        if (!(Boolean) object) {
+                            mainPause = false;
+                        } else {
+                            if (user == null)
+                                mainClass.setScreenToMainMenu();
+                            else
+                                mainClass.setScreenToUserMenu(user);
+                        }
+                    }
+                }.button("Yes", true).button("No", false).
+                        text("Do you want to exit game?");
+
+                dialog.padLeft(30).padRight(30);
+                dialog.align(Align.center);
+                dialog.setSize(400, 300);
+                dialog.show(stage);
+            }
+        });
+
         stage.addActor(lifeLabel);
         stage.addActor(scoreLabel);
         stage.addActor(muteButton);
+        stage.addActor(pauseButton);
 
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0.8f, 1);
+        Gdx.gl.glClearColor(0.61f, 0.4f, 0.2f, 1f);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stateTime += delta;
-
-        gameMap.update(Gdx.graphics.getDeltaTime());
-        scoreLabel.setText("score: " + gameMap.pacman.score);
-        lifeLabel.setText("life: " + gameMap.pacman.life);
+        if (!mainPause) {
+            gameMap.update(Gdx.graphics.getDeltaTime());
+            scoreLabel.setText("score: " + gameMap.pacman.score);
+            lifeLabel.setText("life: " + gameMap.pacman.life);
+        }
 
         stage.act(delta);
         stage.draw();
@@ -106,8 +142,9 @@ public class GameScreen implements Screen {
         if (MainClass.isSuccessful && waitingScreen == ScreenType.USER) {
             if (user != null) {
                 checkHighScore();
-            }
-            mainClass.setScreenToUserMenu(user);
+                mainClass.setScreenToUserMenu(user);
+            } else
+                mainClass.setScreenToMainMenu();
         }
         if (MainClass.isSuccessful && waitingScreen == null) {
             MainClass.isSuccessful = false;
@@ -173,12 +210,17 @@ public class GameScreen implements Screen {
         pacmanDies.dispose();
         pacmanEats.dispose();
         gameOverSound.dispose();
+        energyBombEaten.dispose();
         stage.dispose();
     }
 
     public void assembleAnimations() {  //y:0 to 3 - 4 to 7      x:0 to 5 - 6 to 11
-        Texture ghostsSheet = new Texture(Gdx.files.internal("ghost.png"));
-        tmp = TextureRegion.split(ghostsSheet, TileType.TILE_SIZE, TileType.TILE_SIZE);
+        Texture ghostsSheet = new Texture(Gdx.files.internal("character_ghost.png"));
+        tmp_ghost = TextureRegion.split(ghostsSheet, 64, 64);
+
+        Texture pacmanSheet = new Texture(Gdx.files.internal("character_pacman.png"));
+        tmp_pacman = TextureRegion.split(pacmanSheet, 71, 71);
+
     }
 
     private void createEasyGhost() {
@@ -228,6 +270,7 @@ public class GameScreen implements Screen {
         pacmanEats = Gdx.audio.newSound(Gdx.files.internal("sounds/pacman_eat.ogg"));
         pacmanDies = Gdx.audio.newSound(Gdx.files.internal("sounds/pacman_die.ogg"));
         ghostsDie = Gdx.audio.newSound(Gdx.files.internal("sounds/ghost_die.ogg"));
+        energyBombEaten = Gdx.audio.newSound(Gdx.files.internal("sounds/energy_bomb.ogg"));
         gameOverSound = Gdx.audio.newSound(Gdx.files.internal("sounds/pacman_death.mp3"));
     }
 }

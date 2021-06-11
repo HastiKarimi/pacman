@@ -1,10 +1,8 @@
 package com.pacman.model;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +13,6 @@ public abstract class Ghost extends Entity {
     public boolean canMove = false;
     public Move firstMove;
     public boolean isAvailable = false;
-    public Animation<TextureRegion> walkAnimation;
     public static Animation<TextureRegion> otherAnimation;
     public static HashMap<Move, TextureRegion[]> otherFrames;
 
@@ -76,7 +73,7 @@ public abstract class Ghost extends Entity {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.draw(setAnimation().getKeyFrame(gameMap.gameScreen.stateTime, true)
-                , shape.x, shape.y);
+                , shape.x, shape.y, TileType.TILE_SIZE, TileType.TILE_SIZE);
     }
 
     public void create(int startRowAnimation, int startColAnimation) {
@@ -90,7 +87,7 @@ public abstract class Ghost extends Entity {
         for (Move move : new Move[]{Move.DOWN, Move.LEFT, Move.RIGHT, Move.UP}) {
             TextureRegion[] textureRegion = new TextureRegion[6];
             for (int i = startCol; i < startCol + 6; i++) {
-                textureRegion[i - startCol] = gameMap.gameScreen.tmp[startRow][i];
+                textureRegion[i - startCol] = gameMap.gameScreen.tmp_ghost[startRow][i];
             }
             myFrames.put(move, textureRegion);
             startRow++;

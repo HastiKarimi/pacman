@@ -2,6 +2,7 @@ package com.pacman.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.pacman.MainClass;
+import com.pacman.model.Wallpaper;
 import com.pacman.tools.Pair;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -56,7 +57,8 @@ public class LoginMenu extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 Pair answer = loginMenuController.processInfo(
                         usernameTextField.getText(), passwordTextField.getText());
-                if (answer.first) {
+                if (!answer.first) {
+                    isWaitingForScreen = ScreenType.USER;
                     showMessage(answer.second, false);
                 } else {
                     showMessage(answer.second, true);
@@ -65,20 +67,25 @@ public class LoginMenu extends ScreenAdapter {
                 }
             }
         });
-        table.add(buttonLogin).colspan(2).width(250).align(Align.center).padTop(50);
+        table.add(buttonLogin).colspan(2).width(250).align(Align.center).padTop(100);
         table.row();
 
-
+        stage.addActor(new Wallpaper(1, 212,650, 600, 400));
         stage.addActor(table);
+        stage.addActor(mainClass.createBackButton(new MainMenu(mainClass)));
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0,0,0.8f,1);
+        Gdx.gl.glClearColor(0.32f, 0.29f, 0.26f, 1f);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (MainClass.isSuccessful) {
+        if (MainClass.isSuccessful && isWaitingForScreen == null) {
+            MainClass.isSuccessful = false;
+        }
+
+        if (MainClass.isSuccessful && isWaitingForScreen == ScreenType.USER) {
             MainClass.isSuccessful = false;
             mainClass.setScreenToUserMenu(loginMenuController.getUser());
         }

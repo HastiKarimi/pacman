@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pacman.MainClass;
 import com.pacman.model.PreMap;
 import com.pacman.model.User;
+import com.pacman.model.Wallpaper;
 import com.pacman.screens.ScreenType;
 
 import java.util.HashMap;
@@ -53,7 +54,7 @@ public class PreGameScreen implements Screen {
 
         //table1    for saving and creating
         table1 = new Table();
-        table1.setBounds(400, 20, 512, 500);
+        table1.setBounds(450, 20, 512, 500);
         buttonCreate = new TextButton("create", mainClass.skin3Json);
         buttonCreate.padTop(1);
         buttonCreate.addListener(new ClickListener(){
@@ -126,14 +127,27 @@ public class PreGameScreen implements Screen {
         //table3    for changing map
         table3 = new Table();
         table3.setBounds(0, 70, 512, 80);
-        nextMap = new ImageButton(mainClass.skin3Json.getDrawable("image-right-down"));
-        previousMap = new ImageButton(mainClass.skin3Json.getDrawable("image-left-down"));
-        table3.add(previousMap).width(50).height(50).padRight(100);
+        nextMap = new ImageButton(mainClass.skin3Json, "right");
+        nextMap.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                preMapActor.showNextMap();
+            }
+        });
+        previousMap = new ImageButton(mainClass.skin3Json, "left");
+        previousMap.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                preMapActor.showPreviousMap();
+            }
+        });
+        table3.add(previousMap).width(50).height(50).padRight(90);
         table3.add(nextMap).width(50).height(50);
 
         muteButton = new ImageButton(mainClass.skin3Json.getDrawable("image-music-down"),
                 null, mainClass.skin3Json.getDrawable("image-music-off-copy-down"));
-        muteButton.setBounds(700,700,100,100);
+        muteButton.getImage().scaleBy(1.5f);
+        muteButton.setBounds(700,700,50,50);
         muteButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -149,6 +163,7 @@ public class PreGameScreen implements Screen {
         });
 
 
+        stage.addActor(new Wallpaper(6, 0, 0, 800, 800));
         stage.addActor(table1);
         stage.addActor(table2);
         stage.addActor(table3);

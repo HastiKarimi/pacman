@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.pacman.MainClass;
 import com.pacman.model.User;
+import com.pacman.model.Wallpaper;
 
 public class UserMenu extends ScreenAdapter {
     MainClass mainClass;
@@ -39,7 +40,7 @@ public class UserMenu extends ScreenAdapter {
                 mainClass.setScreenToPreGameScreen(user);
             }
         });
-        table.add(buttonPlay).minWidth(400).expandX();
+        table.add(buttonPlay).minWidth(400).expandX().padTop(100);
         table.row();
 
 
@@ -47,7 +48,7 @@ public class UserMenu extends ScreenAdapter {
         buttonShowScoreboard.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //TODO
+                mainClass.setScreenToScoreboardMenu(user);
             }
         });
         table.add(buttonShowScoreboard).minWidth(400).expandX();
@@ -99,14 +100,14 @@ public class UserMenu extends ScreenAdapter {
         table.add(buttonLogout).minWidth(400);
         table.row();
 
-
+        stage.addActor(new Wallpaper(1, 212,650, 600, 400));
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0.8f, 1);
+        Gdx.gl.glClearColor(0.32f, 0.29f, 0.26f, 1f);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act(delta);

@@ -5,18 +5,22 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.pacman.model.PreMap;
 import com.pacman.model.User;
 import com.pacman.screens.*;
 import com.pacman.screens.game.GameScreen;
 import com.pacman.screens.game.PreGameScreen;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainClass extends Game {
@@ -25,7 +29,7 @@ public class MainClass extends Game {
     public BitmapFont blackFont;
     public TextureAtlas textureAtlas1;   //neon
     public TextureAtlas textureAtlas2;   //freezing
-    public Skin skin1, skin2, skin2Json, skin3Json;
+    public Skin skin1, skin2, skin2Json, skin3Json, skin1Json;
     public static boolean isSuccessful = false;
     Screen lastScreen;
 
@@ -83,6 +87,12 @@ public class MainClass extends Game {
         setScreen(lastScreen);
     }
 
+    public void setScreenToScoreboardMenu(User user) {
+        lastScreen.dispose();
+        lastScreen = new ScoreboardMenu(this, user);
+        setScreen(lastScreen);
+    }
+
     @Override
     public void render() {
         super.render();
@@ -121,10 +131,24 @@ public class MainClass extends Game {
         return textButton;
     }
 
+    public Table createBackButton(Screen screen) {
+        TextButton button = createButton("back");
+        button.setBounds(50,25,150,80);
+        button.pad(20).padBottom(30f);
+        button.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setScreen(screen);
+            }
+        });
+        return button;
+    }
+
     public TextField createTextField(String text) {
-        //TODO try to fix the bug
         Skin skin = new Skin(Gdx.files.internal("freezing/skin/freezing-ui.json"));
-        return new TextField(text, skin);
+        TextField textField = new TextField(text, skin);
+        textField.getStyle().font = skin3Json.getFont("font-title");
+        return textField;
     }
 
     public void createDialog(String message, boolean isWarning, Stage stage) {
@@ -143,6 +167,7 @@ public class MainClass extends Game {
         dialog.getBackground().setMinWidth(400);
         dialog.getBackground().setMinHeight(200);
         dialog.text(message);
+        dialog.getTitleLabel().setFontScale(2f);
         dialog.button("Ok", true); //sends "true" as the result
         dialog.key(Input.Keys.ENTER, true); //sends "true" when the ENTER key is pressed
         dialog.show(stage);
@@ -155,6 +180,7 @@ public class MainClass extends Game {
         blackFont.setColor(Color.BLACK);
         textureAtlas1 = new TextureAtlas(Gdx.files.internal("neon/skin/neon-ui.atlas"));
         skin1 = new Skin(textureAtlas1);
+        skin1Json = new Skin(Gdx.files.internal("neon/skin/neon-ui.json"));
         textureAtlas2 = new TextureAtlas(Gdx.files.internal("freezing/skin/freezing-ui.atlas"));
         skin2 = new Skin(textureAtlas2);
         skin2Json = new Skin(Gdx.files.internal("freezing/skin/freezing-ui.json"));
@@ -168,5 +194,15 @@ public class MainClass extends Game {
         }.getType();
         HashMap<String, User> allUsersData = gson.fromJson(file.readString(), type);
         User.setAllUsers(allUsersData);
+        setDefaultMapsData();
+    }
+
+
+    public void setDefaultMapsData(){
+        Gson gson = new Gson();
+        FileHandle file = Gdx.files.local("users/users default maps.json");
+        Type type = new TypeToken<ArrayList<int[][]>>() {
+        }.getType();
+        PreMap.defaultMaps = gson.fromJson(file.readString(), type);
     }
 }

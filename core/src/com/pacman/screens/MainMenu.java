@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.google.gson.Gson;
 import com.pacman.MainClass;
 import com.pacman.model.User;
@@ -28,9 +28,10 @@ public class MainMenu extends ScreenAdapter {
     TextButton buttonExit, buttonPlay, buttonLogin, buttonSignUp;
     Skin skin;
     Table table;
+    Wallpaper wallpaper;
 
     public MainMenu(MainClass mainClass) {
-        this.stage = new Stage(new ExtendViewport(1024, 1024));
+        this.stage = new Stage(new StretchViewport(1024, 1024));
         this.mainClass = mainClass;
     }
 
@@ -49,7 +50,7 @@ public class MainMenu extends ScreenAdapter {
                 mainClass.setScreenToPreGameScreen(null);
             }
         });
-        table.add(buttonPlay).width(300);
+        table.add(buttonPlay).width(300).padTop(100f);
         table.row();
 
 
@@ -88,7 +89,7 @@ public class MainMenu extends ScreenAdapter {
         table.add(buttonExit).width(300);
         table.row();
 
-        stage.addActor(new Wallpaper());
+        stage.addActor(new Wallpaper(1, 212,650, 600, 400));
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
     }
@@ -109,7 +110,7 @@ public class MainMenu extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0.8f, 1);
+        Gdx.gl.glClearColor(0.32f, 0.29f, 0.26f, 1f);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act(delta);

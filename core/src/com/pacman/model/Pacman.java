@@ -3,7 +3,11 @@ package com.pacman.model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import java.util.HashMap;
 
 public class Pacman extends Entity {
     public int life;
@@ -27,13 +31,14 @@ public class Pacman extends Entity {
 
     public void eatNormalFood() {
         score += 5;
-        if (lastSoundId != 0)   gameMap.gameScreen.pacmanEats.stop(lastSoundId);
+        if (lastSoundId != 0) gameMap.gameScreen.pacmanEats.stop(lastSoundId);
         lastSoundId = gameMap.gameScreen.pacmanEats.play(0.1f * gameMap.soundRatio, 1f, 0);
     }
 
     public void eatEnergyBomb() {
         score += 0;
         isEnergyMode = true;
+        gameMap.gameScreen.energyBombEaten.play(gameMap.soundRatio);
         setTimer(10f);
     }
 
@@ -44,7 +49,8 @@ public class Pacman extends Entity {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(nowImage, shape.x, shape.y);
+        batch.draw(setAnimation().getKeyFrame(gameMap.gameScreen.stateTime, true),
+                shape.x, shape.y, TileType.TILE_SIZE, TileType.TILE_SIZE);
     }
 
     @Override
@@ -124,6 +130,7 @@ public class Pacman extends Entity {
         nowImage = new Texture(Gdx.files.internal("pacman.png"));
         setImage(nowImage);
         setSpeed(65);
+        createFrames(0,0);
     }
 
     @Override
@@ -161,5 +168,23 @@ public class Pacman extends Entity {
             }
             this.resetPosition(true);
         }
+    }
+
+    public void createFrames(int startRow, int startCol) {
+        myFrames = new HashMap<>();
+        for (Move move : new Move[]{Move.UP, Move.DOWN, Move.RIGHT, Move.LEFT}) {
+            TextureRegion[] textureRegion = new TextureRegion[3];
+            for (int i = startCol; i < startCol + 3; i++) {
+                textureRegion[i - startCol] = gameMap.gameScreen.tmp_pacman[startRow][i];
+            }
+            myFrames.put(move, textureRegion);
+            startRow++;
+        }
+    }
+
+    public Animation<TextureRegion> setAnimation() {
+        walkAnimation = new Animation<TextureRegion>(0.25f
+                , myFrames.get(moveCondition));
+        return walkAnimation;
     }
 }

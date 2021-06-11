@@ -1,15 +1,22 @@
 package com.pacman.model;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.google.gson.Gson;
 import com.pacman.tools.boardcreator.BoardCreator;
+
+import java.util.ArrayList;
 
 public class PreMap extends Actor {
     private static final TextureRegion[][] tiles;
     public int[][] map;
     public User user;
+    int index = 0;
+    public static ArrayList<int[][]> defaultMaps;
 
     static {
         tiles = TextureRegion.split(new Texture("tile.png"), TileType.TILE_SIZE, TileType.TILE_SIZE);
@@ -17,7 +24,7 @@ public class PreMap extends Actor {
 
     public PreMap(User user) {
         this.user = user;
-        createNewMap();
+        map = defaultMaps.get(0);
     }
 
     @Override
@@ -58,7 +65,37 @@ public class PreMap extends Actor {
     }
 
     public void saveMap() {
-        if (user!=null && !user.mazes.contains(map))
+        if (user != null && !user.mazes.contains(map))
             user.mazes.add(map);
+    }
+
+    public void showNextMap() {
+        index++;
+        if (index < 2) {
+            map = defaultMaps.get(index);
+        } else {
+            try {
+                map = user.mazes.get(index - 2);
+            } catch (IndexOutOfBoundsException | NullPointerException e) {
+                index--;
+            }
+        }
+    }
+
+    public void showPreviousMap() {
+        index--;
+        if (index >= 2) {
+            try {
+                map = user.mazes.get(index - 2);
+            } catch (NullPointerException ignored) {
+                index++;
+            }
+        } else {
+            try {
+                map = defaultMaps.get(index);
+            } catch (IndexOutOfBoundsException e) {
+                index++;
+            }
+        }
     }
 }

@@ -1,11 +1,10 @@
 package com.pacman.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public class User implements Comparable {
-    private final String username;
+    public final String username;
     private String password;
     public int highScore = 0;
     public LocalDateTime timeOfHighScore;
@@ -37,6 +36,16 @@ public class User implements Comparable {
 //    public void addMaze() { //it is not empty
 //
 //    }
+
+    public static ArrayList<User> sortUsersForScoreBoard() {
+        Collection<User> demoValues = allUsers.values();
+
+        //Creating an ArrayList of values
+        ArrayList<User> users = new ArrayList<>(demoValues);
+        Collections.sort(users);
+//        System.out.println(users);
+        return users;
+    }
 
     public String getPassword() {
         return password;

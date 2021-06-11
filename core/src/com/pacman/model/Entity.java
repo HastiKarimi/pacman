@@ -1,6 +1,7 @@
 package com.pacman.model;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -20,6 +21,7 @@ public abstract class Entity extends Actor {
     public float elapsedTime;
     public float targetDurationInSec;
     public int firstRow, firstCol;
+    public Animation<TextureRegion> walkAnimation;
 
     {
         size = TileType.TILE_SIZE;

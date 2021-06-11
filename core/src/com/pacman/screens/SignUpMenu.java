@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.pacman.MainClass;
 import com.pacman.controller.SignUpMenuController;
+import com.pacman.model.Wallpaper;
 import com.pacman.tools.Pair;
 
 
@@ -19,10 +20,11 @@ public class SignUpMenu extends ScreenAdapter {
     SignUpMenuController signUpMenuController;
     MainClass mainClass;
     Stage stage;
-    TextButton buttonRegister;
+    TextButton buttonRegister, buttonBack;
     Label usernameLabel, passwordLabel, confirmPasswordLabel;
     TextField usernameTextField, passwordTextField, confirmPasswordTextField;
     Table table;
+    ScreenType waitingScreen;
 
 
     {
@@ -46,8 +48,8 @@ public class SignUpMenu extends ScreenAdapter {
         confirmPasswordLabel = mainClass.createLabel("confirm: ");
         confirmPasswordTextField = mainClass.createTextField("");
 
-        table.add(usernameLabel);
-        table.add(usernameTextField).width(300).height(60).row();
+        table.add(usernameLabel).padTop(100f);
+        table.add(usernameTextField).width(300).height(60).padTop(100f).row();
         table.add(passwordLabel);
         table.add(passwordTextField).width(300).height(60).row();
         table.add(confirmPasswordLabel);
@@ -64,6 +66,7 @@ public class SignUpMenu extends ScreenAdapter {
 
                 if (!answer.first) {
                     showMessage(answer.second, false);
+                    waitingScreen = ScreenType.MAIN;
                 } else {
                     showMessage(answer.second, true);
                     usernameTextField.setText("");
@@ -72,20 +75,24 @@ public class SignUpMenu extends ScreenAdapter {
                 }
             }
         });
-        table.add(buttonRegister).colspan(2).width(250).align(Align.center).padTop(50);
+        table.add(buttonRegister).colspan(2).width(250).align(Align.center).padTop(70f);
         table.row();
 
-
+        stage.addActor(new Wallpaper(1, 212,650, 600, 400));
         stage.addActor(table);
+        stage.addActor(mainClass.createBackButton(new MainMenu(mainClass)));
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0.8f, 1);
+        Gdx.gl.glClearColor(0.32f, 0.29f, 0.26f, 1f);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (MainClass.isSuccessful) {
+        if (MainClass.isSuccessful && waitingScreen == null) {
+            MainClass.isSuccessful = false;
+        }
+        if (MainClass.isSuccessful && waitingScreen == ScreenType.MAIN) {
             MainClass.isSuccessful = false;
             mainClass.setScreenToMainMenu();
         }

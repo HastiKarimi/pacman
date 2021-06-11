@@ -3,6 +3,7 @@ package com.pacman.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.pacman.MainClass;
+import com.pacman.model.Wallpaper;
 import com.pacman.tools.Pair;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -75,14 +76,14 @@ public class ChangePasswordMenu extends ScreenAdapter { //done
         table.add(buttonContinue).colspan(2).minWidth(250).align(Align.center).padTop(50);
         table.row();
 
-
+        stage.addActor(new Wallpaper(1, 212,650, 600, 400));
         stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0,0,0.8f,1);
+        Gdx.gl.glClearColor(0.32f, 0.29f, 0.26f, 1f);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (MainClass.isSuccessful) {

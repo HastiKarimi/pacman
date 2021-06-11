@@ -18,7 +18,6 @@ public class GameMap extends Actor {
     public GameScreen gameScreen;
     public String id;
     public int soundRatio = 1;
-    public String name;
     public int[][] map;
 
     public Pacman pacman;
@@ -32,7 +31,7 @@ public class GameMap extends Actor {
         this.gameScreen = gameScreen;
         this.map = map;
         ghosts = new Ghost[4];
-        tiles = TextureRegion.split(new Texture("tile.png"), TileType.TILE_SIZE, TileType.TILE_SIZE);
+        tiles = TextureRegion.split(new Texture("tiles.png"), 150, 150);
         createFramesForOtherAnimation();
     }
 
@@ -43,7 +42,8 @@ public class GameMap extends Actor {
                 for (int col = 0; col < getWidthOfMap(); col++) {
                     TileType type = this.getTileTypeByCoordinate(layer, col, row);
                     if (type != null && type.getId() != 4)
-                        batch.draw(tiles[0][type.getId() - 1], col * TileType.TILE_SIZE + spaceX, row * TileType.TILE_SIZE + spaceY);
+                        batch.draw(tiles[0][type.getId() - 1], col * TileType.TILE_SIZE + spaceX,
+                                row * TileType.TILE_SIZE + spaceY, TileType.TILE_SIZE, TileType.TILE_SIZE);
                 }
             }
         }

@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.pacman.screens.game.GameScreen;
-import jdk.javadoc.internal.doclets.formats.html.markup.Table;
 
 import java.util.HashMap;
 
@@ -47,7 +46,6 @@ public class GameMap extends Actor {
                 }
             }
         }
-        super.draw(batch, parentAlpha);
     }
 
 

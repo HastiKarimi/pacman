@@ -22,6 +22,7 @@ import com.pacman.screens.game.PreGameScreen;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MainClass extends Game {
     public Stage stage;
@@ -34,13 +35,13 @@ public class MainClass extends Game {
     Screen lastScreen;
 
 
-
     @Override
     public void create() {
         setAssets();
         stage = new Stage();
         setData();
         setScreenToMainMenu();
+//        abc();
 //        setScreenToGameScreen(null);
 //        setScreenToPreGameScreen(null);
     }
@@ -133,9 +134,9 @@ public class MainClass extends Game {
 
     public Table createBackButton(Screen screen) {
         TextButton button = createButton("back");
-        button.setBounds(50,25,150,80);
+        button.setBounds(50, 25, 150, 80);
         button.pad(20).padBottom(30f);
-        button.addListener(new ClickListener(){
+        button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 setScreen(screen);
@@ -198,11 +199,13 @@ public class MainClass extends Game {
     }
 
 
-    public void setDefaultMapsData(){
+    public void setDefaultMapsData() {
         Gson gson = new Gson();
         FileHandle file = Gdx.files.local("users/users default maps.json");
         Type type = new TypeToken<ArrayList<int[][]>>() {
         }.getType();
         PreMap.defaultMaps = gson.fromJson(file.readString(), type);
     }
+
+
 }
